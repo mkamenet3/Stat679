@@ -14,8 +14,8 @@ touch CPUtime.csv
 
 for file in timetest* 
   do 
-    echo log/$file >>  analysis.csv
-    grep "hmax =" log/$file | awk '{ print $4 }' >> hmax.csv
+    echo log/$file | grep -Eo 'timetest[0-9][0-9]' >>  analysis.csv
+    grep "hmax =" log/$file | awk '{ print $4 }' | grep -Eo '[0-9]|[0-9][0-9]'>> hmax.csv
     grep "Elapsed time: " out/$file | awk '{ print $4 }'  >> CPUtime.csv
 done
 
@@ -31,26 +31,6 @@ sed 1i"analysis,h,CPUtime" summary.csv > master.csv
 
 ##remove unnecessary files
 rm analysis.csv hmax.csv CPUtime.csv summary.csv
-
-
-
-#paste -d , test.csv test2.csv > testcombind.csv
-##this will create csv with what I need
-##so i can create a bunch of intermediate csvs, pipe into master, and then
-#remove them
-
-
-#grep "Elapsed time: " out/timetest02_snaq.out | awk '{ print $3 }'
-
-#grep "hmax =" log/timetest02_snaq.log | awk '{ print $3 }'
-
-#echo log/timetest02_snaq.log
-
-
-#add in header: sed 1i"head1,head2" test2.csv > new.csv
-
-#cat testMaster.csv  >> test4.csv
-
 
 
 
