@@ -35,7 +35,7 @@ done
 #4) Merging
 
 ##Merge in new files into 1
-paste -d , Nruns.csv Nfail.csv fabs.csv frel.csv xabs.csv seed.csv > ex3_summary.csv
+paste -d , Nruns.csv Nfail.csv fabs.csv frel.csv xabs.csv xrel.csv seed.csv > ex3_summary.csv
 #under3460.csv under3450.csv under3440.csv > ex3_summary.csv
 
 ##Add in headers to this file
