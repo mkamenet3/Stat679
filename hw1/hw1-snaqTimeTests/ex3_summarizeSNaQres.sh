@@ -42,11 +42,8 @@ paste -d , Nruns.csv Nfail.csv fabs.csv frel.csv xabs.csv xrel.csv seed.csv > ex
 sed 1i"Nruns,Nfail,fabs,frel,xabs,xrel,seed" ex3_summary.csv > ex3_headers.csv
 
 ##Append old summary and new summary
-paste -d, master.csv ex3_headers.csv > ex3_master.csv
+paste -d, summaryFiles/master.csv ex3_headers.csv > summaryFiles/ex3_master.csv
 
-##Add headers to master
-#sed 1i"analysis,h,CPUtime,Nruns,Nfail,fabs,frel,xabs,xrel,seed" > ex3_master.csv
-#sed 1i"analysis,h,CPUtime,Nruns,Nfail,fabs,frel,xabs,seed,under3460,under3450,under3440" > ex3_master.csv
 
 ##Remove unnecessary files
 for file in Nruns Nfail fabs frel xabs xrel seed ex3_summary ex3_headers #ex3_summary #under3460 under3450 under3440
@@ -55,10 +52,6 @@ done
 
 
 
-#Random extra
-#echo log/$file >>  analysis.csv
-#grep "hmax =" log/$file | awk '{ print $4 }' >> hmax.csv
-#grep "Elapsed time: " out/$file | awk '{ print $4 }'  >> CPUtime.csv
 
 
 

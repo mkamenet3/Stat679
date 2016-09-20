@@ -27,7 +27,7 @@ done
 paste -d , analysis.csv hmax.csv CPUtime.csv > summary.csv
 
 ##Add headers to master
-sed 1i"analysis,h,CPUtime" summary.csv > master.csv
+sed 1i"analysis,h,CPUtime" summary.csv > summaryFiles/master.csv
 
 ##remove unnecessary files
 rm analysis.csv hmax.csv CPUtime.csv summary.csv
