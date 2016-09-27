@@ -15,9 +15,9 @@ touch output/CPUtime.csv
 
 for file in timetest* 
   do 
-    echo data/log/$file | grep -Eo 'timetest[0-9][0-9]' >>  analysis.csv
-    grep "hmax =" data/log/$file | awk '{ print $4 }' | grep -Eo '[0-9]|[0-9][0-9]'>> hmax.csv
-    grep "Elapsed time: " data/out/$file | awk '{ print $4 }'  >> CPUtime.csv
+    echo data/log/$file | grep -Eo 'timetest[0-9][0-9]' >>  output/analysis.csv
+    grep "hmax =" data/log/$file | awk '{ print $4 }' | grep -Eo '[0-9]|[0-9][0-9]'>> output/hmax.csv
+    grep "Elapsed time: " data/out/$file | awk '{ print $4 }'  >> output/CPUtime.csv
 done
 
 
@@ -25,7 +25,7 @@ done
 #intermediate files  
 
 ##Combine into master
-paste -d , analysis.csv hmax.csv CPUtime.csv > output/summary.csv
+paste -d , output/analysis.csv output/hmax.csv output/CPUtime.csv > output/summary.csv
 
 ##Add headers to master
 sed 1i"analysis,h,CPUtime" output/summary.csv > output/summaryFiles/master.csv
