@@ -1,22 +1,23 @@
 #This shell script will begin the summary of the results of these analyses.
 #It will be in a .csv format and will contain 1 row per analysis and 3 columns,
 #each of which is 1) analysis, 2) 'h', and 3) "CPUtime"
+#This script should be run out of the 'hw1' directory
 
 
 
 
 #1) Create intermediate files
-touch analysis.csv
-touch hmax.csv
-touch CPUtime.csv
+touch output/analysis.csv
+touch output/hmax.csv
+touch output/CPUtime.csv
 
 #2) Extract
 
 for file in timetest* 
   do 
-    echo log/$file | grep -Eo 'timetest[0-9][0-9]' >>  analysis.csv
-    grep "hmax =" log/$file | awk '{ print $4 }' | grep -Eo '[0-9]|[0-9][0-9]'>> hmax.csv
-    grep "Elapsed time: " out/$file | awk '{ print $4 }'  >> CPUtime.csv
+    echo data/log/$file | grep -Eo 'timetest[0-9][0-9]' >>  analysis.csv
+    grep "hmax =" data/log/$file | awk '{ print $4 }' | grep -Eo '[0-9]|[0-9][0-9]'>> hmax.csv
+    grep "Elapsed time: " data/out/$file | awk '{ print $4 }'  >> CPUtime.csv
 done
 
 
@@ -24,13 +25,13 @@ done
 #intermediate files  
 
 ##Combine into master
-paste -d , analysis.csv hmax.csv CPUtime.csv > summary.csv
+paste -d , analysis.csv hmax.csv CPUtime.csv > output/summary.csv
 
 ##Add headers to master
-sed 1i"analysis,h,CPUtime" summary.csv > summaryFiles/master.csv
+sed 1i"analysis,h,CPUtime" output/summary.csv > output/summaryFiles/master.csv
 
 ##remove unnecessary files
-rm analysis.csv hmax.csv CPUtime.csv summary.csv
+rm output/analysis.csv output/hmax.csv output/CPUtime.csv output/summary.csv
 
 
 
