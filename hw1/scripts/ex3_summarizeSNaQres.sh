@@ -8,12 +8,12 @@
 
 #1) Run summarizeSNaQres.sh script to update summary.csv (to which we will append new columns)
 
-source summarizeSNaQres.sh
+source scripts/summarizeSNaQres.sh
 
 
 #2) Create intermediate files
 for file in Nruns Nfail fabs frel xabs xrel seed under3460 under3450 under3440
-  do touch $file.csv
+  do touch output/$file.csv
 done
 
 #2)a) Set targets for calculations
@@ -21,62 +21,66 @@ target3460=3460
 target3450=3450
 target3440=3440
 
+#b) Set Global Files
+FILES=`find data/log -name "timetest*.log"`
+
 #3) Extract necessary data
-for file in timetest*
+for file in "timetest*"
 do
-  echo log/$file | grep -Eo '[0-9][0-9]' #just so we can see what's going on
+  #echo log/$file | grep -Eo '[0-9][0-9]' #just so we can see what's going on
   #and there are no mismatched files
-  echo out/$file | grep -Eo '[0-9][0-9]'
-  grep "seconds in" out/$file | awk '{ print $7 }' >> Nruns.csv
-  grep "max number of failed proposals" log/$file | awk '{ print $8 }' | cut -d, -f1>> Nfail.csv
-  grep "ftolAbs=" log/$file | awk '{ print $5 }' | cut -d, -f1 | cut -d= -f2 >> fabs.csv
-  grep "ftolRel=" log/$file | awk '{ print $4 }' | cut -d, -f1 | cut -d= -f2 >> frel.csv
-  grep "xtolAbs=" log/$file | awk '{ print $2}' | cut -d, -f1 | cut -d= -f2 >> xabs.csv
-  grep "xtolRel=" log/$file | awk '{ print $3 }' | cut -d, -f1 | cut -d= -f2 >> xrel.csv
-  grep "main seed" log/$file | awk '{ print $3 }' >> seed.csv
+  #echo out/$file | grep -Eo '[0-9][0-9]'
+
+  #Extract features
+  grep "seconds in" data/out/$file | awk '{ print $7 }' >> output/Nruns.csv
+  grep "max number of failed proposals" data/log/$file | awk '{ print $8 }' | cut -d, -f1>> output/Nfail.csv
+  grep "ftolAbs=" data/log/$file | awk '{ print $5 }' | cut -d, -f1 | cut -d= -f2 >> output/fabs.csv
+  grep "ftolRel=" data/log/$file | awk '{ print $4 }' | cut -d, -f1 | cut -d= -f2 >> output/frel.csv
+  grep "xtolAbs=" data/log/$file | awk '{ print $2}' | cut -d, -f1 | cut -d= -f2 >> output/xabs.csv
+  grep "xtolRel=" data/log/$file | awk '{ print $3 }' | cut -d, -f1 | cut -d= -f2 >> output/xrel.csv
+  grep "main seed" data/log/$file | awk '{ print $3 }' >> output/seed.csv
+done
+
+for file in $FILES
+do
+  #Count features
   under3460=0
   under3450=0
   under3440=0
-  proposedval=`grep "loglik=*\ of best " log/$file | cut -d\s -f2 | tr -d " t"`
+
+  sed 's/_//g' $file > tmp
+  
+  proposedval=`grep "loglik=*\ of best " tmp | cut -d\s -f2 | tr -d " t" | bc`
   for val in $proposedval
   do
-    if [ $val -le $target3460 ]
-    then
-      under3460=$((under3460+1))
-    fi
-    if [ $val -le $target3450 ]
-    then
-      under3450=$((under3450+1))
-    fi
-    if [ $val -le $target3440 ]
-    then
-      under3440=$((under3440+1))
-    fi
-  done
-
-
-
-
-  #grep "loglik=*\ of best " log/$file | cut -d\s -f2 | tr -d " t" | bc | awk '$1<=$target3460{count++}END{print ""count}' >> under3460.csv
-  #grep "loglik=*\ of best " log/$file | cut -d\s -f2 | tr -d " t" | bc | awk '$1<=$target3450{count++}END{print ""count}' >> under3450.csv
-  #grep "loglik=*\ of best " log/$file | cut -d\s -f2 | tr -d " t" | bc | awk '$1<=$target3440{count++}END{print ""count}' >> under3460.csv
+    mynum=`echo $val | awk ' { print $1 } '`
+    truth3460=`echo $mynum " < $target3460" | bc`
+    truth3450=`echo $mynum " < $target3450" | bc`
+    truth3440=`echo $mynum " < $target3440" | bc`
+    under3460=$(($under3460+$truth3460))
+    under3450=$(($under3450+$truth3450))
+    under3440=$(($under3440+$truth3440))
+  done  
+  echo $under3460 >> output/under3460.csv 
+  echo $under3450 >> output/under3450.csv
+  echo $under3440 >> output/under3440.csv
 done
 
 
 #4) Merging
 
 ##Merge in new files into 1
-paste -d , Nruns.csv Nfail.csv fabs.csv frel.csv xabs.csv xrel.csv seed.csv under3460.csv under3450.csv under3440.csv > ex3_summary.csv
+paste -d , output/Nruns.csv output/Nfail.csv output/fabs.csv output/frel.csv output/xabs.csv output/xrel.csv output/seed.csv output/under3460.csv output/under3450.csv output/under3440.csv > output/ex3_summary.csv
 
 ##Add in headers to this file
-sed 1i"Nruns,Nfail,fabs,frel,xabs,xrel,seed,under3460,under3450,under3440" ex3_summary.csv > ex3_headers.csv
+sed 1i"Nruns,Nfail,fabs,frel,xabs,xrel,seed,under3460,under3450,under3440" output/ex3_summary.csv > output/ex3_headers.csv
 
 ##Append old summary and new summary
-paste -d, summaryFiles/master.csv ex3_headers.csv > summaryFiles/ex3_master.csv
+paste -d, output/summaryFiles/master.csv output/ex3_headers.csv > output/summaryFiles/ex3_master.csv
 
 
 ##Remove unnecessary files
-rm *.csv
+rm output/*.csv
 
 
 
