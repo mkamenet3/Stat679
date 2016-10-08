@@ -10,5 +10,5 @@ The scripts found in this folder are:
 - normalizeFileNames.sh
 - summaraizeSNaQres.sh
 
-
+Code was written using cygwin shell.
 

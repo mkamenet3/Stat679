@@ -13,3 +13,6 @@ run to reflect the name changes seen here.
 
 All files for HW1 should be run from the main directory, 'hw1'
 
+The two folders, __log__ and __out__ house the .log and .out files
+respectively.
+
