@@ -12,3 +12,10 @@ The scripts found in this folder are:
 
 Code was written using cygwin shell.
 
+In "scripts/ex3_summaraizeSNaQres.sh", I use multiple 'sed' statements to
+temporarily find and replace an underscore, P, and N. This is due to the 'bc'
+command I had to download externally for cygwin. My understanding is that
+windows adds some ASCII characters and this somehow messes up casting from
+character to numeric and results in errors. From reading online, this was
+a workaround I found.
+

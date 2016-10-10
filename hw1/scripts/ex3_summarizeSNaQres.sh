@@ -1,3 +1,8 @@
+#!/bin/bash
+#set -e
+#set -u
+#set -o pipefail
+
 #This shell script uses the same structure as summarizeSNaQres.sh
 #It will produce a table in csv format with one row per analysis, 
 #including the same columns as before and also including additional columns:
@@ -11,34 +16,29 @@
 source scripts/summarizeSNaQres.sh
 
 
-#2) Create intermediate files
-for file in Nruns Nfail fabs frel xabs xrel seed under3460 under3450 under3440
-  do touch output/$file.csv
-done
-
-#2)a) Set targets for calculations
+#1)a) Set targets for calculationsi and create empty csv's to append to
 target3460=3460
 target3450=3450
 target3440=3440
 
+touch output/under3460.csv
+touch output/under3450.csv
+touch output/under3440.csv
+
 #b) Set Global Files
-FILES=`find data/log -name "timetest*.log"`
+FILES=`find data/log -name "*.???"`
 
-#3) Extract necessary data
-for file in "timetest*"
+#2) Extract necessary data
+for file in *.???
 do
-  #echo log/$file | grep -Eo '[0-9][0-9]' #just so we can see what's going on
-  #and there are no mismatched files
-  #echo out/$file | grep -Eo '[0-9][0-9]'
-
   #Extract features
-  grep "seconds in" data/out/$file | awk '{ print $7 }' >> output/Nruns.csv
-  grep "max number of failed proposals" data/log/$file | awk '{ print $8 }' | cut -d, -f1>> output/Nfail.csv
-  grep "ftolAbs=" data/log/$file | awk '{ print $5 }' | cut -d, -f1 | cut -d= -f2 >> output/fabs.csv
-  grep "ftolRel=" data/log/$file | awk '{ print $4 }' | cut -d, -f1 | cut -d= -f2 >> output/frel.csv
-  grep "xtolAbs=" data/log/$file | awk '{ print $2}' | cut -d, -f1 | cut -d= -f2 >> output/xabs.csv
-  grep "xtolRel=" data/log/$file | awk '{ print $3 }' | cut -d, -f1 | cut -d= -f2 >> output/xrel.csv
-  grep "main seed" data/log/$file | awk '{ print $3 }' >> output/seed.csv
+  grep "seconds in" data/out/$file | awk '{ print $7 }' > output/Nruns.csv
+  grep "max number of failed proposals" data/log/$file | awk '{ print $8 }' | cut -d, -f1 > output/Nfail.csv
+  grep "ftolAbs=" data/log/$file | awk '{ print $5 }' | cut -d, -f1 | cut -d= -f2 > output/fabs.csv
+  grep "ftolRel=" data/log/$file | awk '{ print $4 }' | cut -d, -f1 | cut -d= -f2 > output/frel.csv
+  grep "xtolAbs=" data/log/$file | awk '{ print $2}' | cut -d, -f1 | cut -d= -f2 > output/xabs.csv
+  grep "xtolRel=" data/log/$file | awk '{ print $3 }' | cut -d, -f1 | cut -d= -f2 > output/xrel.csv
+  grep "main seed" data/log/$file | awk '{ print $3 }' > output/seed.csv
 done
 
 for file in $FILES
@@ -48,19 +48,24 @@ do
   under3450=0
   under3440=0
 
-  sed 's/_//g' $file > tmp
+  sed 's/_//g;s/P//g;s/N//g' $file > tmp
   
   proposedval=`grep "loglik=*\ of best " tmp | cut -d\s -f2 | tr -d " t" | bc`
   for val in $proposedval
   do
-    mynum=`echo $val | awk ' { print $1 } '`
-    truth3460=`echo $mynum " < $target3460" | bc`
-    truth3450=`echo $mynum " < $target3450" | bc`
-    truth3440=`echo $mynum " < $target3440" | bc`
-    under3460=$(($under3460+$truth3460))
-    under3450=$(($under3450+$truth3450))
-    under3440=$(($under3440+$truth3440))
-  done  
+    if [ $val != "0000" ]
+    then
+      mynum=`echo $val | awk ' { print $1 } '`
+      truth3460=`echo $mynum " < $target3460" | bc`
+      truth3450=`echo $mynum " < $target3450" | bc`
+      truth3440=`echo $mynum " < $target3440" | bc`
+      under3460=$(($under3460+$truth3460))
+      under3450=$(($under3450+$truth3450))
+      under3440=$(($under3440+$truth3440))
+    else
+      echo "Something went wrong - no runs."
+    fi 
+  done
   echo $under3460 >> output/under3460.csv 
   echo $under3450 >> output/under3450.csv
   echo $under3440 >> output/under3440.csv
@@ -81,32 +86,4 @@ paste -d, output/summaryFiles/master.csv output/ex3_headers.csv > output/summary
 
 ##Remove unnecessary files
 rm output/*.csv
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
