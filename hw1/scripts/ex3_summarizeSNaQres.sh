@@ -41,6 +41,7 @@ do
   grep "main seed" data/log/$file | awk '{ print $3 }' > output/seed.csv
 done
 
+
 for file in $FILES
 do
   #Count features
@@ -49,22 +50,25 @@ do
   under3440=0
 
   sed 's/_//g;s/P//g;s/N//g' $file > tmp
-  
-  proposedval=`grep "loglik=*\ of best " tmp | cut -d\s -f2 | tr -d " t" | bc`
+  exception=`basename -s ".log" $file`
+  echo $exception
+
+  if [ $exception == "net1_snaq" ]
+  then
+    proposedval=`grep "loglik=* of best " tmp | cut -d\s -f4 | tr -d " t" | bc`
+  else
+    proposedval=`grep "loglik=*\ of best " tmp | cut -d\s -f2 | tr -d " t" | bc`
+  fi
+
   for val in $proposedval
   do
-    if [ $val != "0000" ]
-    then
-      mynum=`echo $val | awk ' { print $1 } '`
-      truth3460=`echo $mynum " < $target3460" | bc`
-      truth3450=`echo $mynum " < $target3450" | bc`
-      truth3440=`echo $mynum " < $target3440" | bc`
-      under3460=$(($under3460+$truth3460))
-      under3450=$(($under3450+$truth3450))
-      under3440=$(($under3440+$truth3440))
-    else
-      echo "Something went wrong - no runs."
-    fi 
+    mynum=`echo $val | awk ' { print $1 } '`
+    truth3460=`echo $mynum " < $target3460" | bc`
+    truth3450=`echo $mynum " < $target3450" | bc`
+    truth3440=`echo $mynum " < $target3440" | bc`
+    under3460=$(($under3460+$truth3460))
+    under3450=$(($under3450+$truth3450))
+    under3440=$(($under3440+$truth3440))
   done
   echo $under3460 >> output/under3460.csv 
   echo $under3450 >> output/under3450.csv
