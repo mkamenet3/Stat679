@@ -1,3 +1,8 @@
+#!/bin/bash
+set -e
+set -u
+set -o pipefail 
+
 #This shell scropt will change the file names from timetesty_snaw.log to
 #timetest0y_snaq.log, where "y" is a digit between 1 and 9.
 #The .out files will be changed similarly as well.
