@@ -1,7 +1,7 @@
 #!/bin/bash
-#set -e
-#set -u
-#set -o pipefail
+set -e
+set -u
+set -o pipefail
 
 #This shell script uses the same structure as summarizeSNaQres.sh
 #It will produce a table in csv format with one row per analysis, 
@@ -89,5 +89,5 @@ paste -d, output/summaryFiles/master.csv output/ex3_headers.csv > output/summary
 
 
 ##Remove unnecessary files
-rm output/*.csv
+rm output/Nruns.csv output/Nfail.csv output/fabs.csv output/frel.csv output/xabs.csv output/xrel.csv output/seed.csv output/under3460.csv output/under3450.csv output/under3440.csv output/ex3_summary.csv output/ex3_headers.csv 
 
