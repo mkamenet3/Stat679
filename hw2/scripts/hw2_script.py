@@ -8,13 +8,14 @@ def reformat_twofiles(fin1, fin2, fout='output/merge.csv'):
     with open(fin1, 'r') as fh:
         #set global variables for fin1
         linelist = fh.readlines()
-        headers = ["id", "date", "time", "temp"]
         tempDates = []
+        identifier = []
         tempTimeDate = []
         temp = []
         for line in linelist[4:len(linelist)]:
             if line.strip():
                 actual_line = line.rstrip('\n').split(',')
+                identifier.append(actual_line[0])
                 d_formatTime = datetime.strptime(actual_line[1], '%m/%d/%y %I:%M:%S %p')
                 d = actual_line[1].split(' ')
                 d_format = datetime.strptime(d[0], '%m/%d/%y')
@@ -26,9 +27,8 @@ def reformat_twofiles(fin1, fin2, fout='output/merge.csv'):
         print("everything ran without error for ", fin1)
         
     with open(fin2, 'r') as fh:
-        #Set global variables for fin2
+        #Set global variables for fin1
         linelist = fh.readlines()
-        headers = linelist[0]
         energyDates = []
         Wh = []
         currentEnergyDay = []
@@ -60,7 +60,7 @@ def reformat_twofiles(fin1, fin2, fout='output/merge.csv'):
     
     #Ensure we're not overwriting the file
     file = [fout.split('/')[-1]]
-    
+    print(os.listdir("output/"),file)
     #print(os.listdir("output"), file)
     while os.listdir("output/") == file:
         warning = "File already exists in directory and will be overwritten"
@@ -71,8 +71,12 @@ def reformat_twofiles(fin1, fin2, fout='output/merge.csv'):
             print("Ok, old file overwritten by new file")            
             f = open(fout, 'w')
             for i in range(len(Timestr)):
-                f.write("{} {} {}\n".format(Timestr[i], temp[i], tenergy[i]))
+                f.write("{} {} {} {}\n".format(identifier[i],
+                                               Timestr[i], 
+                                               temp[i],
+                                               tenergy[i]))
             f.close()
+            break
         if (prompt == 'n'):
             print("Ok, ending the process")
             break
