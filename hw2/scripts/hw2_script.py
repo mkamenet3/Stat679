@@ -55,7 +55,14 @@ def reformat_twofiles(fin1, fin2, fout='output/merge.csv'):
             tenergy[n_energy] = Wh_scale[i]
         
     #Combine output and write to csv
-    Timestr = [dt.strftime('%m/%d/%y %I:%M:%S %p') for dt in tempTimeDate] 
+    
+    ##Final Formatting of lists
+    identifier.insert(0, "No.")
+    Timestr = [dt.strftime('%m/%d/%y %I:%M:%S %p') for dt in tempTimeDate]
+    Timestr.insert(0,"DateTime")
+    temp.insert(0, "WaterTemp")
+    tenergy.insert(0, "Energy")
+    
     #convert to string
     
     #Ensure we're not overwriting the file
@@ -71,7 +78,7 @@ def reformat_twofiles(fin1, fin2, fout='output/merge.csv'):
             print("Ok, old file overwritten by new file")            
             f = open(fout, 'w')
             for i in range(len(Timestr)):
-                f.write("{} {} {} {}\n".format(identifier[i],
+                f.write("{} , {} , {} , {}\n".format(identifier[i],
                                                Timestr[i], 
                                                temp[i],
                                                tenergy[i]))
