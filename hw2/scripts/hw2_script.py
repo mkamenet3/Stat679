@@ -1,7 +1,7 @@
 from datetime import datetime #module for working with dates
 
 
-def reformat_twofiles(fin1, fin2, fout='../output/merge.csv'):
+def reformat_twofiles(fin1, fin2, fout='output/merge.csv'):
     """This function takes inputs of an energy and a temperature file. The energy file is unique by date, while the temperature file has multiple entries per one date. After checking that times are sorted from earliest to latest by date, we extract the latest temperature reading in each date. Final output is a csv containing the temperature and energy readings, with energy readings being the last reading on that date"""
     
     with open(fin1, 'r') as fh:
@@ -51,8 +51,7 @@ def reformat_twofiles(fin1, fin2, fout='../output/merge.csv'):
             tenergy[n_energy] = Wh_scale[i]
         
     #Combine output and write to csv
-    Timestr = [dt.strftime('%m/%d/%y %I:%M:%S %p') for dt in tempTimeDate] 
-    #convert to string
+    Timestr = [dt.strftime('%m/%d/%y %I:%M:%S %p') for dt in tempTimeDate] #convert to string
     f = open(fout, 'w')
     for i in range(len(Timestr)):
         f.write("{} {} {}\n".format(Timestr[i], temp[i], tenergy[i]))
@@ -60,9 +59,9 @@ def reformat_twofiles(fin1, fin2, fout='../output/merge.csv'):
                 
  
  #Call
-reformat_twofiles("../data/waterTemperature.csv", 
-                  "../data/energy.csv", 
-                  "../output/merged_output.csv")
+reformat_twofiles("data/waterTemperature.csv", 
+                  "data/energy.csv", 
+                  "output/merged_output.csv")
     
     
     
