@@ -18,6 +18,8 @@ $merged_output.csv$, but the default is $output.csv$; the scripts directory
 holds $hw2_script.py$, which is the main script used to do the process.
 
 ###How to Run It
+
+(from the shell)
 The script should be run from the main $hw2$ directory as such:
 
 ```
@@ -33,6 +35,14 @@ error.
 
 FUture versions of this script will allow user to input letters without needing
 to put single quotes around it. 
+
+(from inside the script)
+```
+#Call
+reformat_twofiles("data/waterTemperature.csv", 
+                  "data/energy.csv", 
+                  "output/merged_output.csv")
+```
 
 ###Assumptions
 In order for the script to run:
