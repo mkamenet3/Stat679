@@ -5,6 +5,44 @@ Data was downloaded from \url{https://github.com/UWMadison-computingtools/course
 
 All scripts should be run from the main **hw2** directory. If this repo is cloned, all folder structures will remain intact to enable the user to run the code as instructed here.
 
+###Software
+This script was written using Python 3 on Cygwin shell.
+
+It was tested from Cygwin command line and ran without error on 11/15/16
+
+###Directory Structure
+The **hw2** directory consists of folders: data, output, and scripts; $data$
+holds the original data files energy.csv and waterTemperature.csv; $output$
+will hold the final output of the script. Presently, that output is called
+$merged_output.csv$, but the default is $output.csv$; the scripts directory
+holds $hw2_script.py$, which is the main script used to do the process.
+
+###How to Run It
+The script should be run from the main $hw2$ directory as such:
+
+```
+python data/waterTemperature.csv data/energy.csv output/merged_output.csv
+```
+
+If a .csv with the same name already exists in the output folder, then you will
+be prompted to decide whether or not you want to overwrite that file. Entry of
+'y' will overwrite the existing file, entry of'n' will end the process so you
+can decide on a new name for the file. Entry of any other string will break the
+process. Entry of a letter without single quotes '' around it will result in an
+error. 
+
+FUture versions of this script will allow user to input letters without needing
+to put single quotes around it. 
+
+###Assumptions
+In order for the script to run:
+
+- waterTemperature.csv file needs to be the first input followed by energy.csv
+- Last input will always be what the output file is called. It can be left
+  blank and then it will be called $output.csv$ by default
+
+
+
 ##The Exercises
 
 ###background (may be skipped)
