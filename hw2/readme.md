@@ -20,21 +20,23 @@ The folder structure is as follows:
 Be sure to start with an empty output directory first.
 Code can be run inside the python script:
 ```
+#Call with user-defined output file name
 reformat_twofiles("data/waterTemperature.csv",
                   "data/energy.csv",
                   "output/merged_output.csv")
+#OR
+
+#Call with default:
+reformat_twofiles("data/waterTemperature.csv",
+                  "data/energy.csv")
+
 ```
 
 Here, we specify the output file name to be "merged_output.csv"
 
-Code can also be run from the command line. Be sure to be in the $hw2$ directory:
-```
-python scripts/hw2_script.py data/waterTemperature.csv data/energy.csv output/merged_output.csv
-
-```
-Again, here we specify the output file name.
-
 We have included a feature where, if a file with the same name already exists in the directory, user will be prompted as to whether or not they want to overwrite that file. Input is either 'y' or 'n'. Single quotes are required (next iteration of code will allow user to input without quotes). Any other input in quotes will result in a break as will 'n'. Not using quotes will result in an error. Presently, this check only works for when there is a single file in the directory (will work any expanding this to if any of the files in the folder already exists with the proposed name).
+
+For next steps, we will also allow user to call the python code from the command line and input file names as arguments.
 
 
 ##The Exercises
