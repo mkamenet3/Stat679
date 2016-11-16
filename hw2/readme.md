@@ -1,13 +1,55 @@
 #Stat 679 - Homework 2
 
-##Data Acquisition
-Data was downloaded from \url{https://github.com/UWMadison-computingtools/coursedata}. The repo was cloned and then files extracted using $cp *.csv$. The .csv files for the assignment now reside in the **data** folder here for hw2. There should be two .csv files: $energy.csv$ and $waterTemperature.csv$.
+##Overview
+###Data Acquisition
+Data was downloaded from \url{https://github.com/UWMadison-computingtools/coursedata}. The repo was cloned and then files extracted using ```cp *.csv```. The .csv files for the assignment now reside in the **data** folder here for hw2. There should be two .csv files: $energy.csv$ and $waterTemperature.csv$.
 
-All scripts should be run from the main **hw2** directory. If this repo is cloned, all folder structures will remain intact to enable the user to run the code as instructed here.
+Calling the script from the command line, user should be in the **hw2** directory. The particular script can also be run in conjunction with the call to code at the bottom.  If this repo is cloned, all folder structures will remain intact to enable the user to run the code as instructed here.
+
+###The Build
+
+Code was written in Python 3 on Cygwin shell.
+
+###Structure
+The folder structure is as follows:
+- **data**: contains files waterTemperature.csv and energy.csv - the two inputs
+- **output**: will contain the results of the merge. This will be a csv with either user-defined name or default $output.csv$ name
+- **scripts**: contains $hw2_script.py$, which is the python file which performs the merge
+
+###Running the Code
+Be sure to start with an empty output directory first.
+Code can be run in two ways.
+
+Running code from the command line and accepting defaults:
+```
+./scripts/hw2_script.py
+```
+The defaults are that the waterTemperature.csv, energy.csv, and output files are hardcoded at the bottom of the call. If user wants to change what the name of the output file is or accept the default (output.csv), this needs to be changed inside script/hw2_script.py:
+
+Where to change the inputs to the main call:
+```
+#Call with user-defined output file name
+reformat_twofiles("data/waterTemperature.csv",
+                  "data/energy.csv",
+                  "output/merged_output.csv")
+#OR
+
+#Call with default:
+reformat_twofiles("data/waterTemperature.csv",
+                  "data/energy.csv")
+
+```
+
+Here, we specify the output file name to be "merged_output.csv"
+
+We have included a feature where, if a file with the same name already exists in the directory, user will be prompted as to whether or not they want to overwrite that file. Input is either 'y' or 'n'. Single quotes are required (next iteration of code will allow user to input without quotes). Any other input in quotes will result in a break as will 'n'. Not using quotes will result in an error. Presently, this check only works for when there is a single file in the directory (will work any expanding this to if any of the files in the folder already exists with the proposed name).
+
+For next steps, we will also allow user to call the python code from the command line and input file names as arguments.
+
 
 ##The Exercises
 
-###background (may be skipped)
+###Background (may be skipped)
 ----------
 
 These data give an example of a common task, where data are collected
@@ -108,4 +150,3 @@ coding experience.
   - write a newline character to the output
   - write the line to the output (no end of line)
   - write a comma to the output
-
