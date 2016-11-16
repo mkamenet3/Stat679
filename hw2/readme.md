@@ -4,7 +4,7 @@
 ###Data Acquisition
 Data was downloaded from \url{https://github.com/UWMadison-computingtools/coursedata}. The repo was cloned and then files extracted using ```cp *.csv```. The .csv files for the assignment now reside in the **data** folder here for hw2. There should be two .csv files: $energy.csv$ and $waterTemperature.csv$.
 
-All scripts should be run from the main **hw2** directory. If this repo is cloned, all folder structures will remain intact to enable the user to run the code as instructed here.
+Calling the script from the command line, user should be in the **hw2** directory. The particular script can also be run in conjunction with the call to code at the bottom.  If this repo is cloned, all folder structures will remain intact to enable the user to run the code as instructed here.
 
 ###The Build
 
@@ -18,7 +18,15 @@ The folder structure is as follows:
 
 ###Running the Code
 Be sure to start with an empty output directory first.
-Code can be run inside the python script:
+Code can be run in two ways.
+
+Running code from the command line and accepting defaults:
+```
+./scripts/hw2_script.py
+```
+The defaults are that the waterTemperature.csv, energy.csv, and output files are hardcoded at the bottom of the call. If user wants to change what the name of the output file is or accept the default (output.csv), this needs to be changed inside script/hw2_script.py:
+
+Where to change the inputs to the main call:
 ```
 #Call with user-defined output file name
 reformat_twofiles("data/waterTemperature.csv",

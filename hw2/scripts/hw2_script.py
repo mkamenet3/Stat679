@@ -1,7 +1,7 @@
-from __future__ import print_function
+#!/usr/bin/env python
+
 from datetime import datetime #module for working with dates
 import os
-
 
 def reformat_twofiles(fin1, fin2, fout='output/output.csv'):
     """This function takes inputs of an energy and a temperature file. The energy file is unique by date, while the temperature file has multiple entries per one date. After checking that times are sorted from earliest to latest by date, we extract the latest temperature reading in each date. Final output is a csv containing the temperature and energy readings, with energy readings being the last reading on that date"""
@@ -25,7 +25,7 @@ def reformat_twofiles(fin1, fin2, fout='output/output.csv'):
                 temp.append(actual_line[-1])
             else:
                 continue
-        print("everything ran without error for ", fin1)
+        print("everything ran without error for " + fin1)
 
     with open(fin2, 'r') as fh:
         #Set global variables for fin1
@@ -46,7 +46,7 @@ def reformat_twofiles(fin1, fin2, fout='output/output.csv'):
                     print("error in time stamp")
                 Wh.append(actual_line[1])
         Wh_scale = [float(i)/1000 for i in Wh]
-        print("everything ran without error for ", fin2)
+        print("everything ran without error for " + fin2)
 
     #Extraction of energy
     tenergy = ["" for i in range(len(tempDates))]
@@ -68,7 +68,6 @@ def reformat_twofiles(fin1, fin2, fout='output/output.csv'):
 
     #Ensure we're not overwriting the file
     file = [fout.split('/')[-1]]
-    print(os.listdir("output/"),file)
     #print(os.listdir("output"), file)
     while os.listdir("output/") == file:
         warning = "File already exists in directory and will be overwritten"
@@ -98,7 +97,12 @@ def reformat_twofiles(fin1, fin2, fout='output/output.csv'):
                                            tenergy[i]))
         f.close()
 
-
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
+    print(reformat_twofiles("data/waterTemperature.csv",
+                      "data/energy.csv",
+                      "output/merged_output.csv"))
 
 
  #Call
