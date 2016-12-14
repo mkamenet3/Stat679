@@ -1,10 +1,11 @@
+#!/usr/bin/env python
+
 from datetime import datetime #module for working with dates
 import os
 
-
-def reformat_twofiles(fin1, fin2, fout='output/merge.csv'):
+def reformat_twofiles(fin1, fin2, fout='output/output.csv'):
     """This function takes inputs of an energy and a temperature file. The energy file is unique by date, while the temperature file has multiple entries per one date. After checking that times are sorted from earliest to latest by date, we extract the latest temperature reading in each date. Final output is a csv containing the temperature and energy readings, with energy readings being the last reading on that date"""
-    
+
     with open(fin1, 'r') as fh:
         #set global variables for fin1
         linelist = fh.readlines()
@@ -24,8 +25,8 @@ def reformat_twofiles(fin1, fin2, fout='output/merge.csv'):
                 temp.append(actual_line[-1])
             else:
                 continue
-        print("everything ran without error for ", fin1)
-        
+        print("everything ran without error for " + fin1)
+
     with open(fin2, 'r') as fh:
         #Set global variables for fin1
         linelist = fh.readlines()
@@ -44,8 +45,8 @@ def reformat_twofiles(fin1, fin2, fout='output/merge.csv'):
                 if d[1] != "00:00:00":
                     print("error in time stamp")
                 Wh.append(actual_line[1])
-        Wh_scale = [float(i)/1000 for i in Wh]  
-        print("everything ran without error for ", fin2)
+        Wh_scale = [float(i)/1000 for i in Wh]
+        print("everything ran without error for " + fin2)
 
     #Extraction of energy
     tenergy = ["" for i in range(len(tempDates))]
@@ -53,33 +54,32 @@ def reformat_twofiles(fin1, fin2, fout='output/merge.csv'):
         n_energy = tempDates.index(energyDates[i]) - 1
         if n_energy >= 0:
             tenergy[n_energy] = Wh_scale[i]
-        
+
     #Combine output and write to csv
-    
+
     ##Final Formatting of lists
     identifier.insert(0, "No.")
     Timestr = [dt.strftime('%m/%d/%y %I:%M:%S %p') for dt in tempTimeDate]
     Timestr.insert(0,"DateTime")
     temp.insert(0, "WaterTemp")
     tenergy.insert(0, "Energy")
-    
+
     #convert to string
-    
+
     #Ensure we're not overwriting the file
     file = [fout.split('/')[-1]]
-    print(os.listdir("output/"),file)
     #print(os.listdir("output"), file)
     while os.listdir("output/") == file:
         warning = "File already exists in directory and will be overwritten"
         print(warning)
-        prompt = input("Press 'y' to proceed or 'n' to abort")
+        prompt = input("Press 'y' to proceed or 'n' to abort: ")
         print(prompt)
         if (prompt == 'y'):
-            print("Ok, old file overwritten by new file")            
+            print("Ok, old file overwritten by new file")
             f = open(fout, 'w')
             for i in range(len(Timestr)):
                 f.write("{} , {} , {} , {}\n".format(identifier[i],
-                                               Timestr[i], 
+                                               Timestr[i],
                                                temp[i],
                                                tenergy[i]))
             f.close()
@@ -87,24 +87,28 @@ def reformat_twofiles(fin1, fin2, fout='output/merge.csv'):
         if (prompt == 'n'):
             print("Ok, ending the process")
             break
-    
-                
- 
+    else:
+        print("Creating output.csv")
+        f = open(fout, 'w')
+        for i in range(len(Timestr)):
+            f.write("{} , {} , {} , {}\n".format(identifier[i],
+                                           Timestr[i],
+                                           temp[i],
+                                           tenergy[i]))
+        f.close()
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
+    print(reformat_twofiles("data/waterTemperature.csv",
+                      "data/energy.csv",
+                      "output/merged_output.csv"))
+
+
  #Call
-reformat_twofiles("data/waterTemperature.csv", 
-                  "data/energy.csv", 
-                  "output/merged_output.csv")
-    
-    
-    
-    
-    
-    
- 
-    
-    
-    
-    
-    
-    
-    
+#reformat_twofiles("data/waterTemperature.csv",
+#                  "data/energy.csv",
+#                  "output/merged_output.csv")
+#Call with default:
+#reformat_twofiles("data/waterTemperature.csv",
+#                  "data/energy.csv")
