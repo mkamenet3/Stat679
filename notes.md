@@ -836,4 +836,96 @@ paramvalues = [10.0^i for i in -3:2]
 - BenchmarkTools - allws you to benchmark your calculations
 - abstract types have names that start with 'abstract'
 - multiple dispatch: looks at arguments and decides which method to call
--
+
+
+##12-15-16 - SLURM and Stat HPC Cluster
+
+- all packages and timing are pretty much taken care of for you
+- nodes = more and more computers
+- head node = lunchbox; need to request access
+- AFS vs NFS
+  - don't want to be in AFS if you're doing HPC
+  - want to be in /workspace (head node)
+  - /workspce/software (where the packages will be)
+  - personal packages need to be installed into custom location under software
+- commands  
+  - *sinfo* - displays current partitions (which servers you can submit to)
+  - *squeue* - displays jobs currently running or queued
+  - *sacct* - displays your jobs, cores used, run statements
+  - *sbatch* - submits your batch script to the scheduler
+
+```
+cd /workspace/
+cd __username__
+```
+Bash script:
+- You want the shebang there - it's not a comment the #SBATCH
+
+```
+#!/bin/Bash
+#SBATCH --mail-user=_myemail_@wisc.edu
+#SBATCH --mail-type=ALL
+/bin/hostname
+sleep 10
+```
+
+```
+sinfo #* means the default cluster your job will be submitted to
+squeue #gives you a job number
+scontrol show_job 1234 #number is job id - this shows you everything that was done
+```
+```
+cat slurm-1234.out
+```
+
+```
+#!/bin/Bash
+#SBATCH --mail-user=_myemail_@wisc.edu
+#SBATCH --mail-type=ALL
+#SBATCH -t 1 #approx time you want on HPC Cluster, otherwise it's at the bottom of the queue (4 days - bottom of cluster). This is 1 minute
+#SBATCH -n 1
+#SBATCH -c 2
+
+/bin/hostname
+sleep 10
+```
+
+For parallel, use ```srun```
+```
+#SBATCH -n 8 #waits until 8 cores available to run
+srun -n 8 bin/hostname
+```
+```
+printenv #print environment for user
+srun printenv #prints slurm environment
+```
+
+If you're running sub-proceeses within the program you wrote, then if you don't allocate properly, slurm will yell at you.
+
+```
+squeue -u username
+scancel _jobnumber_
+```
+```
+srun --pty -w marazno05 /bin/bash #drops you into bash
+top #can see what process is running as regular
+```
+Useful to sometimes just specify the home directory
+```
+export HOME = _dirname
+export R_LIBS=/workspace/user/R #set path to R libraries
+```
+```
+sshfs #so you can use atom
+```
+
+- *srun* creates job steps
+- always include -t and -n, cuz otherwise without time estimates your job will be pushed to the bottom
+- try to use software that's compiled on the cluster
+- whatever you put in the commandline will override what's in the bash script.
+- so you can have the script say submit 200 scripts and on the commandline just specify in the array that it should only run the first 3 (array, 0-2)
+
+
+For more info, checkout <http://www.stat.wisc.edu/services/hpc-cluster>
+
+Course website also has examples ![here](http://cecileane.github.io/computingtools/pages/notes1215.html)
